@@ -1,9 +1,11 @@
+require("./models/GameStreams");
 const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const Sentry = require("./middlewares/requireSentry");
 const _ = require("underscore");
 const Bottleneck = require("bottleneck");
+const streamRoutes = require("./routes/streamRoutes");
 
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
@@ -15,7 +17,7 @@ const server = app.listen(PORT, () => {
   console.log("Listening on port" + PORT);
 });
 
-app.set("twitchKey", {});
+app.set("twitchKey", null);
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
@@ -51,6 +53,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 });
 
 app.use(bodyParser.json());
+app.use(streamRoutes);
 
 app.use(
   Sentry.Handlers.errorHandler({

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 var _ = require("underscore");
 const axios = require("axios");
 const moment = require("moment");
-const axios = require("axios");
+const GameStreams = mongoose.model("GameStreams");
 const { response } = require("express");
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
@@ -13,10 +13,10 @@ module.exports = {
   fetchAppToken: async function () {
     let response;
     try {
-      response = await axios.get(
+      response = await axios.post(
         `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_SECRET}&grant_type=client_credentials`
       );
-      app.get("twitchKey") = response.access_token;
+      app.set("twitchKey", response.data.access_token);
       console.log("TWITCH TOKEN SAVED: " + app.get("twitchKey"));
     } catch (e) {
       console.log(e);
@@ -51,21 +51,43 @@ module.exports = {
     return response;
   },
   fetchStreamsByGame: async function ({ gameId }) {
+    //TODO Move fetches to cron job?
+    //TODO handle token expiration
     let response;
-    try {
-      response = await axios.get(
-        `https://api.twitch.tv/helix/streams?first=100&game_id=${gameId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${app.get("twitchKey")}`,
-            "Client-Id": process.env.TWITCH_CLIENT_ID,
-          },
-        }
-      );
-    } catch (e) {
-      console.log(e);
+    let streamCard = await GameStreams.findOne({ gameId: gameId });
+    if (!streamCard) {
+      streamCard = new GameStreams({
+        gameId: gameId,
+        streams: [],
+        updatedTime: moment.format(),
+      });
+      await streamCard.save();
     }
-    return response;
+
+    if (
+      streamCard.streams.length > 0 &&
+      moment(streamCard.updatedTime).isAfter(moment().subtract(30, "minutes"))
+    ) {
+      return streamCard.streams;
+    } else {
+      try {
+        response = await axios.get(
+          `https://api.twitch.tv/helix/streams?first=100&game_id=${gameId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${app.get("twitchKey")}`,
+              "Client-Id": process.env.TWITCH_CLIENT_ID,
+            },
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+      streamCard.streams = response.data.data;
+      streamCard.updatedTime = moment.format();
+      await streamCard.save();
+      return response.data.data;
+    }
   },
   fetchStreams: async function () {
     let response;
