@@ -51,8 +51,6 @@ module.exports = {
     return response;
   },
   fetchStreamsByGame: async function ({ gameId }) {
-    //TODO Move fetches to cron job?
-    //TODO handle token expiration
     let response;
     let streamCard = await GameStreams.findOne({ gameId: gameId });
     if (!streamCard) {
@@ -70,6 +68,14 @@ module.exports = {
     ) {
       return streamCard.streams;
     } else {
+      //Check for token expiration and fetch new one if needed
+      const tokenVal = await this.validateToken();
+      //TODO check twitch doc to see correct param name
+      if (!tokenVal.data.status) {
+        await this.fetchAppToken();
+      }
+
+      //Fetch game streams
       try {
         response = await axios.get(
           `https://api.twitch.tv/helix/streams?first=100&game_id=${gameId}`,

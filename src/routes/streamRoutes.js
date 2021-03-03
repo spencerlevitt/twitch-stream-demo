@@ -18,8 +18,6 @@ router.get("/streams", async (req, res) => {
       allStreams = await twitchFunctions.fetchStreamsByGame({ gameId });
     }
 
-    //Grab streams for that game if it's been > 30 minutes
-
     res.send(allStreams);
   } catch (e) {
     console.log(e);
