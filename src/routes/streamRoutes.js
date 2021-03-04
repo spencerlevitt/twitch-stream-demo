@@ -7,7 +7,7 @@ const twitchFunctions = require("../middlewares/twitchFunctions");
 
 const router = express.Router();
 
-router.get("/streams", async (req, res) => {
+router.post("/streams", async (req, res) => {
   const { gameId } = req.body;
   try {
     let allStreams;

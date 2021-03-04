@@ -6,6 +6,7 @@ const Sentry = require("./middlewares/requireSentry");
 const _ = require("underscore");
 const Bottleneck = require("bottleneck");
 const streamRoutes = require("./routes/streamRoutes");
+const cors = require("cors");
 
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
@@ -28,7 +29,9 @@ app.set("limiter", limiter);
 
 app.use(Sentry.Handlers.requestHandler());
 
-app.use(function (req, res, next) {
+app.use(cors());
+
+/*app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
@@ -46,7 +49,7 @@ app.use(function (req, res, next) {
     return res.status(200).json({});
   }
   next();
-});
+});*/
 
 app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");

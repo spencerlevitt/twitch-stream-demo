@@ -57,7 +57,7 @@ module.exports = {
       streamCard = new GameStreams({
         gameId: gameId,
         streams: [],
-        updatedTime: moment.format(),
+        updatedTime: moment().format(),
       });
       await streamCard.save();
     }
@@ -66,6 +66,7 @@ module.exports = {
       streamCard.streams.length > 0 &&
       moment(streamCard.updatedTime).isAfter(moment().subtract(30, "minutes"))
     ) {
+      console.log("HAVE RECENT STREAM ALREADY");
       return streamCard.streams;
     } else {
       //Check for token expiration and fetch new one if needed
@@ -76,6 +77,7 @@ module.exports = {
       }
 
       //Fetch game streams
+      console.log("GAME ID " + gameId);
       try {
         response = await axios.get(
           `https://api.twitch.tv/helix/streams?first=100&game_id=${gameId}`,
@@ -89,8 +91,10 @@ module.exports = {
       } catch (e) {
         console.log(e);
       }
+      console.log("TWITCH RESPONSE ");
+      console.log(response.data);
       streamCard.streams = response.data.data;
-      streamCard.updatedTime = moment.format();
+      streamCard.updatedTime = moment().format();
       await streamCard.save();
       return response.data.data;
     }
