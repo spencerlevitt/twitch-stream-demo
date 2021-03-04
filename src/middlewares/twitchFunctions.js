@@ -91,8 +91,6 @@ module.exports = {
       } catch (e) {
         console.log(e);
       }
-      console.log("TWITCH RESPONSE ");
-      console.log(response.data);
       streamCard.streams = response.data.data;
       streamCard.updatedTime = moment().format();
       await streamCard.save();
