@@ -32,9 +32,9 @@ module.exports = {
         },
       });
     } catch (e) {
-      console.log(e);
+      return false;
     }
-    return response;
+    return true;
   },
   fetchTopGames: async function () {
     let response;
@@ -71,8 +71,9 @@ module.exports = {
     } else {
       //Check for token expiration and fetch new one if needed
       const tokenVal = await this.validateToken();
-      //TODO check twitch doc to see correct param name
-      if (!tokenVal.data.status) {
+      console.log("TOKEN STATUS: " + tokenVal);
+      if (!tokenVal) {
+        console.log("FETCH NEW APP TOKEN");
         await this.fetchAppToken();
       }
 

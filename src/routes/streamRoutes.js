@@ -11,6 +11,7 @@ router.post("/streams", async (req, res) => {
   const { gameId } = req.body;
   try {
     let allStreams;
+    console.log("TWITCH KEY: " + app.get("twitchKey"));
     if (!app.get("twitchKey")) {
       await twitchFunctions.fetchAppToken();
       allStreams = await twitchFunctions.fetchStreamsByGame({ gameId });
