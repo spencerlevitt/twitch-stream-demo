@@ -4,6 +4,9 @@ var _ = require("underscore");
 const moment = require("moment");
 const Sentry = require("../middlewares/requireSentry");
 const twitchFunctions = require("../middlewares/twitchFunctions");
+require("dotenv").config();
+const MJ_APIKEY_PUBLIC = process.env.MJ_APIKEY_PUBLIC;
+const MJ_APIKEY_PRIVATE = process.env.MJ_APIKEY_PRIVATE;
 
 const router = express.Router();
 
@@ -25,6 +28,47 @@ router.post("/streams", async (req, res) => {
     Sentry.captureException(e);
     res.status(422).send(e.message);
   }
+});
+
+router.post("/email", async (req, res) => {
+  const { name, email, text } = req.body;
+
+  const mailjet = require("node-mailjet").connect(
+    MJ_APIKEY_PUBLIC,
+    MJ_APIKEY_PRIVATE
+  );
+  const request = mailjet.post("send", { version: "v3.1" }).request({
+    Messages: [
+      {
+        From: {
+          Email: "spencer@qade.io",
+          Name: "Spencer",
+        },
+        To: [
+          {
+            Email: "spencer@qade.io",
+            Name: "Spencer",
+          },
+          {
+            Email: "austin@qade.io",
+            Name: "Austin",
+          },
+        ],
+        Subject: "Buffd PH Feedback",
+        TextPart: `${text} // SEMT FROM ${name} (${email})`,
+        CustomID: "FeedbackForm",
+      },
+    ],
+  });
+  request
+    .then((result) => {
+      console.log(result.body);
+    })
+    .catch((err) => {
+      console.log(err.statusCode);
+    });
+
+  res.send("success");
 });
 
 module.exports = router;
