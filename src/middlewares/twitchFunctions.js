@@ -81,7 +81,7 @@ module.exports = {
       console.log("GAME ID " + gameId);
       try {
         response = await axios.get(
-          `https://api.twitch.tv/helix/streams?first=100&game_id=${gameId}`,
+          `https://api.twitch.tv/helix/streams?first=100&language=en&game_id=${gameId}`,
           {
             headers: {
               Authorization: `Bearer ${app.get("twitchKey")}`,
