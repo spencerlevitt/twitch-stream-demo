@@ -77,6 +77,34 @@ try {
 
 });
 
+router.post("/verify-user", async (req, res) => {
+
+  const { verificationToken } = req.body;
+
+
+
+  try {
+
+    // Retrieve user object
+
+    const user = dssd
+
+    const verificationId = sddsds
+
+
+
+    // Verify user with user object and passed token
+
+    await dotsFunctions.verifyUser(verificationId, verificationToken);
+
+  } catch (err) {
+
+    console.log(err);
+
+  }
+
+});
+
 
 router.post("/email", async (req, res) => {
   const { name, email, text } = req.body;
