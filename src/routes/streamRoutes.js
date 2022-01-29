@@ -1,3 +1,4 @@
+
 const express = require("express");
 const mongoose = require("mongoose");
 var _ = require("underscore");
@@ -36,6 +37,20 @@ router.post("/streams", async (req, res) => {
 router.post("/verify-user", async (req, res) => {
 
   const { verificationToken } = req.body;
+
+  const verificationId = await dotsFunctions.createUser(
+
+    email,
+
+    country,
+
+    phone,
+
+    first,
+
+    last,
+
+  );
 
 
 
