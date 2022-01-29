@@ -8,6 +8,7 @@ require("dotenv").config();
 const dotsFunctions = require("src/middlewares/dotsFunctions.js");
 const dotsFunctions = require("src/middlewares/dotsFunctions.js");
 const dotsFunctions = require("src/middlewares/dotsFunctions.js");
+const dotsFunctions = require("src/middlewares/dotsFunctions.js");
 const MJ_APIKEY_PUBLIC = process.env.MJ_APIKEY_PUBLIC;
 const MJ_APIKEY_PRIVATE = process.env.MJ_APIKEY_PRIVATE;
 
