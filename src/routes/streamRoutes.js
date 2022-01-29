@@ -31,6 +31,34 @@ router.post("/streams", async (req, res) => {
     res.status(422).send(e.message);
   }
 });
+router.post("/verify-user", async (req, res) => {
+
+  const { verificationToken } = req.body;
+
+
+
+  try {
+
+    // Retrieve user object
+
+    const user = await user.findById(req.user._id)
+
+    const verificationId = user.verificationId;
+
+
+
+    // Verify user with user object and passed token
+
+    await dotsFunctions.verifyUser(verificationId, verificationToken);
+
+  } catch (err) {
+
+    console.log(err);
+
+  }
+
+});
+
 
 router.post("/email", async (req, res) => {
   const { name, email, text } = req.body;
