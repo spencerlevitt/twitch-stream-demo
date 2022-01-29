@@ -5,6 +5,7 @@ const moment = require("moment");
 const Sentry = require("../middlewares/requireSentry");
 const twitchFunctions = require("../middlewares/twitchFunctions");
 require("dotenv").config();
+const dotsFunctions = require("src/middlewares/dotsFunctions.js");
 const MJ_APIKEY_PUBLIC = process.env.MJ_APIKEY_PUBLIC;
 const MJ_APIKEY_PRIVATE = process.env.MJ_APIKEY_PRIVATE;
 
