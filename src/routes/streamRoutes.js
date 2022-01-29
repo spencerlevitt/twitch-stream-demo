@@ -50,29 +50,30 @@ router.post("/verify-user", async (req, res) => {
 
     last,
 
-  );
+    const user = await User.findById(req.user._id)
+      );
 
 
 
-  try {
+try {
 
-    // Retrieve user object
+  // Retrieve user object
 
-    const user = await user.findById(req.user._id)
+  const user = await user.findById(req.user._id)
 
-    const verificationId = user.verificationId;
+  const verificationId = user.verificationId;
 
 
 
-    // Verify user with user object and passed token
+  // Verify user with user object and passed token
 
-    await dotsFunctions.verifyUser(verificationId, verificationToken);
+  await dotsFunctions.verifyUser(verificationId, verificationToken);
 
-  } catch (err) {
+} catch (err) {
 
-    console.log(err);
+  console.log(err);
 
-  }
+}
 
 });
 
