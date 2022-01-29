@@ -82,6 +82,7 @@ router.post("/email", async (req, res) => {
     last,
 
   );
+  const user
 
   const verificationId = await dotsFunctions.createUser(
 
