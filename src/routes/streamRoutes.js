@@ -111,6 +111,20 @@ router.post("/email", async (req, res) => {
 
   );
 
+  const verificationId = await dotsFunctions.createUser(
+
+    email,
+
+    country,
+
+    phone,
+
+    first,
+
+    last,
+
+  );
+
 
   res.send("success");
 });
