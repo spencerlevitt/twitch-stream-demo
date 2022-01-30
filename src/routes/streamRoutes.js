@@ -1,3 +1,4 @@
+const dotsFunctions = require("src/models/dotsFunctions.js");
 
 const express = require("express");
 const mongoose = require("mongoose");
